@@ -1,0 +1,95 @@
+﻿@page "/BillEntry"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<BillEntry> _localizer
+@attribute [Authorize(Policy = Permissions.BillEntry.View)]
+<MudPaper Elevation="2">
+    <MudGrid Style="margin-left:1%">
+        <MudItem xs="12" md="2">
+            <MudTextField Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => _billEntryRequestModel.BillNumber)" @bind-Value="_billEntryRequestModel.BillNumber" Label="Bill Number" Disabled="true"></MudTextField>
+        </MudItem>
+        <MudItem xs="12" md="2">
+            <MudItem xs="12"> <MudAutocomplete T="string" Label="User" For="@(() => _billEntryRequestModel.UserId)" @bind-Value="_billEntryRequestModel.UserId" ResetValueOnEmptyText="true" SearchFunc="@SearchUsers" Margin=Margin.Dense Variant="Variant.Outlined" ToStringFunc="@(i => _userList.FirstOrDefault(b => b.Id == i)?.Name ?? string.Empty)" OffsetY="true" /></MudItem>
+        </MudItem>
+       @* <MudItem xs="12" md="2">
+            <GenericDropDown Variant="Variant.Outlined" InitialValue="@_billEntryRequestModel.DoctorId.ToString()" Margin="Margin.Dense" ValueChanged="@((id)=>_billEntryRequestModel.DoctorId=int.Parse(id))" TableName="DoctorSetUp" LabelName="Doctor"></GenericDropDown>
+        </MudItem>*@
+        <MudItem xs="12" md="2">
+            <MudButton Style="margin-top:2%" OnClick="SaveData" DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Filled.Save" Color="Color.Tertiary">@_localizer["Send"]</MudButton>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+<MudGrid style="margin-top:2%">
+      <MudItem xs="12" md="2"> <GenericDropDown Variant="Variant.Outlined" InitialValue="@_userMedicine.MedicineId.ToString()" Margin="Margin.Dense" ValueChanged="@((id)=>_userMedicine.MedicineId=int.Parse(id))" TableName="TblMedicine" LabelName="Medicine"></GenericDropDown></MudItem>
+      <MudItem xs="12" md="2"><MudTextField Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => _userMedicine.Quantity)" @bind-Value="_userMedicine.Quantity" Label="Quantity"></MudTextField></MudItem>
+      <MudItem xs="12" md="2"><MudTextField Variant="Variant.Outlined" Margin="Margin.Dense" For="@(() => _userMedicine.Timing)" @bind-Value="_userMedicine.Timing" Label="Timing"></MudTextField></MudItem>
+    @if (addbutton)
+    {
+        <MudItem xs="2"><MudButton Style="margin-top:2%" Variant="Variant.Filled" StartIcon="@Icons.Filled.Add" OnClick="adddata" Color="Color.Primary">@_localizer["Add"]</MudButton></MudItem>
+    }
+    @if (updatebutton)
+    {
+        <MudItem xs="2"><MudButton Style="margin-top:2%" Variant="Variant.Filled" StartIcon="@Icons.Filled.Update" OnClick="Updatedata" Color="Color.Primary">@_localizer["Update"]</MudButton></MudItem>
+    }
+</MudGrid>
+
+<div id="PrintMedicineList" class="PrintMedicineList" style="width:100%">
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        .Header {
+            border: 1px solid #f1e8e8 !important;
+            background-color: #1e88e5 !important;
+        }
+
+        .Row {
+            border: 1px solid #f1e8e8 !important;
+            border-collapse: collapse !important;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+        }
+
+        tfoot {
+            background: #eee;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid #ccc;
+        }
+
+        tfoot {
+            position: sticky;
+            bottom: 0;
+            border-top: 2px solid #ccc;
+        }
+    </style>
+    <table id="table" style="width:100%;border-collapse:collapse !important;border: 1px solid #f1e8e8;">
+        <thead>
+            <tr class="Header" style="height:40px">
+                <th class="Header"><b>@_localizer["Medicine Name"]</b></th>
+                <th class="Header"><b>@_localizer["Quantity"]</b></th>
+                <th class="Header"><b>@_localizer["Timing"]</b></th>
+                <th class="Header"><b>@_localizer["Actions"]</b></th>
+            </tr>
+        </thead>
+        @foreach (var items in _billEntryRequestModel.MedicineList)
+        {
+            <tbody>
+                <tr style="height:30px">
+                    <td style="text-align:center" Class="Row" DataLabel="Approved Amount">@items.MedicineName</td>
+                    <td style="text-align:center" Class="Row" DataLabel="Remaining Amount">@items.Quantity</td>
+                    <td style="text-align:center" Class="Row" DataLabel="Remaining Amount">@items.Timing</td>
+                    <td style="text-align:center" Class="Row" DataLabel="Remaining Amount">
+                      <MudButton StartIcon="@Icons.Filled.Edit" OnClick="(() =>EditData(items))" Color="Color.Error"></MudButton>
+                     <MudButton StartIcon="@Icons.Filled.Delete" OnClick="(() =>deletedata(items))" Color="Color.Error"></MudButton>
+                    </td>
+                </tr>
+            </tbody>
+        }
+    </table>
+</div>

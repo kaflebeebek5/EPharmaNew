@@ -1,0 +1,6 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<ViewImage> _localizer
+<img src="@ImagePath" style="height:500px;width:100%" />
+@code
+{
+    [Parameter] public string ImagePath { get; set; }
+}

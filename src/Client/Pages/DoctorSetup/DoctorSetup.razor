@@ -1,0 +1,89 @@
+﻿@page "/DoctorSetup"
+@attribute [Authorize(Policy = Permissions.DoctorSetup.View)]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<DoctorSetup> _localizer
+@using EPharma.Application.Responses
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<HeroTitle Title="@_localizer["Doctor"]" Description="@_localizer["Manage Doctor."]" />
+@if (!_loaded)
+{
+<MudProgressCircular Color="Color.Primary" Indeterminate="true" /> }
+            else
+            {
+<MudTable Hover="true" Elevation="25" Items="_doctorList" Dense="true" Bordered="true" Striped="true" Filter="new Func<DoctoSetupResponse, bool>(Search)" @bind-doctorsetup="_doctor">
+    <ToolBarContent>
+        <div class="justify-center mud-text-align-center">
+            @if (_canCreateDoctorSetup)
+            {
+                     <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">@_localizer["Create"]</MudButton>
+                    <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetDoctorSetupAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+                                        @if (_canExportDoctorSetup)
+                                        {
+                    <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">@_localizer["Export"]</MudButton>} }
+                                    else
+                                    {
+                    <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetDoctorSetupAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+                                        @if (_canExportDoctorSetup)
+                                        {
+                    <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">@_localizer["Export"]</MudButton>}}
+        </div>
+        <MudToolBarSpacer />
+        @if (_canSearchDoctorSetup)
+        {
+<MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="@_localizer["Search for Doctor"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>}
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.Id)">@_localizer["Id"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.Name)">@_localizer["Name"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.Email)">@_localizer["Email"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.PhoneNumber)">@_localizer["Phone Number"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.Specialist)">@_localizer["Specislist"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.Address)">@_localizer["Address"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.Gender)">@_localizer["Gender"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<DoctoSetupResponse, object>(x => x.ImagePath)">@_localizer["Image"]</MudTableSortLabel></MudTh>
+        <MudTh Style="text-align:right">@_localizer["Actions"]</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">
+            <MudHighlighter Text="@context.Name" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="Email">
+            <MudHighlighter Text="@context.Email" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="Code">@context.PhoneNumber</MudTd>
+        <MudTd DataLabel="NRB Code">@context.Specialist</MudTd>
+        <MudTd DataLabel="Operation Date">@context.Address</MudTd>
+        <MudTd DataLabel="Parent Branch">@context.Gender</MudTd>
+        <MudTd DataLabel="Branch Type"><MudButton OnClick="()=>ViewImage(context.Id)" Variant="Variant.Filled" Title="View Image" StartIcon="@Icons.Filled.Preview" Size="Size.Small" Color="Color.Primary"></MudButton></MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            @if (_canEditDoctorSetup || _canDeleteDoctorSetup)
+                {
+<MudMenu Label="@_localizer["Actions"]" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
+    @if (_canEditDoctorSetup)
+        {
+<MudMenuItem @onclick="@(() => InvokeModal(@context.Id))">@_localizer["Edit"]</MudMenuItem>}
+    @if (_canDeleteDoctorSetup)
+        {
+<MudMenuItem @onclick="@(() => Delete(@context.Id))">@_localizer["Delete"]</MudMenuItem>}
+</MudMenu> }
+else
+{
+<MudButton Variant="Variant.Filled"
+           DisableElevation="true"
+           StartIcon="@Icons.Material.Filled.DoNotTouch"
+           IconColor="Color.Secondary"
+           Size="Size.Small"
+           Color="Color.Surface">
+    @_localizer["No Allowed Actions"]
+</MudButton>}
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <TablePager />
+    </PagerContent>
+</MudTable>}

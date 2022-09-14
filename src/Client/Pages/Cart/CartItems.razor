@@ -1,0 +1,85 @@
+﻿@page "/viewcartdetails"
+<HeroTitle Title="Cart Details" Description="" />
+@if (!_loaded)
+{
+    <MudProgressCircular Size="Size.Large" style="height:70px;width:70px;margin-top:22%;margin-left:38%" Class="align-content-center" Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+     <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            .Header {
+                border: 1px solid #b1afaf !important;
+                background-color: #1e88e5 !important;
+                border-collapse: collapse !important;
+                color: white;
+                text-align: left;
+            }
+
+            .Row {
+                border: 1px solid #b1afaf !important;
+                border-collapse: collapse !important;
+                text-align: center;
+            }
+
+            th,
+            td {
+                padding: 0.5rem;
+            }
+
+            tfoot {
+                background: #eee;
+            }
+
+            thead {
+                position: sticky;
+                top: 0;
+                border-bottom: 2px solid #ccc;
+            }
+
+            tfoot {
+                position: sticky;
+                bottom: 0;
+                border-top: 2px solid #ccc;
+            }
+            </style>
+     <MudTable Items="_CartList" FixedFooter="true" FixedHeader="true" Bordered=true Dense=true Striped=true>
+         <HeaderContent>
+             <MudTh Class="Header">Product Name</MudTh>
+             <MudTh Class="Header">Price </MudTh>
+             <MudTh Class="Header">Quantity</MudTh>
+             <MudTh Class="Header">Prescription</MudTh>
+             <MudTh Class="Header">Action</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@context.ProductName</MudTd>
+            <MudTd>@context.Price</MudTd>
+            <MudTd>@context.Quantity</MudTd>
+            <MudTd><MudAvatar Image="@context.ImagePath"Square="true" Style="height:50px;width:50px"></MudAvatar></MudTd>
+            <MudTd><MudButton Variant="Variant.Filled" OnClick="@(()=>Cancel(context.Id))" Color="Color.Error">Cancel</MudButton></MudTd>
+        </RowTemplate>
+        <FooterContent>
+            <MudTd>Total:</MudTd>
+            <MudTd>RS:@_CartList.Sum(x=>x.Price)</MudTd>
+            <MudTd></MudTd>
+            <MudTd></MudTd>
+            <MudTd></MudTd>
+        </FooterContent>
+     </MudTable>
+      <MudGrid>
+        <MudItem xs="2"><MudButton Style="margin-top:2%;" OnClick="Upload" Variant="Variant.Filled" Color="Color.Primary">CheckOut</MudButton></MudItem>
+     @if(Check)
+     {
+       <MudItem xs="3"> <MudButton Style="margin-top:2%;" OnClick="Continue" Variant="Variant.Filled" Color="Color.Success">Continue With Available Product </MudButton></MudItem>
+@*       <MudButton Style="margin-top:2%;margin-left:46%" OnClick="CancleIncompleted" Variant="Variant.Filled" Color="Color.Warning">Cancel Incomplete Product</MudButton>
+*@      <MudItem xs="2"> <MudButton Style="margin-top:2%;" OnClick="CancelAll" Variant="Variant.Filled" Color="Color.Error">Cancel All</MudButton></MudItem>
+      
+     }
+      </MudGrid>
+}
+
+
+

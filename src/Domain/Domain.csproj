@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>EPharma.Domain</RootNamespace>
+    <AssemblyName>EPharma.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\Management\**" />
+    <EmbeddedResource Remove="Entities\Management\**" />
+    <None Remove="Entities\Management\**" />
+  </ItemGroup>
+
+</Project>

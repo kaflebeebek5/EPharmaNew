@@ -1,0 +1,73 @@
+﻿@page "/Viewdetails/{Id}"
+@attribute [AllowAnonymous]
+
+<div style="width:100%">
+ <MudPaper Style="margin-top:5%;margin-bottom:5%" Elevation="5">
+     <div style="width:50%;float:left;margin-top:2%">
+         <MudGrid Style="margin-left:2%">
+            <MudItem xs="10"><b>Product Name:&emsp;&emsp;@_MedicineList.Name</b></MudItem>
+            <MudItem xs="10"><b>Manufacturer Name:&emsp;&emsp; @_MedicineList.Manufacturer</b></MudItem>
+            <MudItem xs="10"><b>Price:&emsp;&emsp;@_MedicineList.SalePrice</b></MudItem>
+            <MudItem xs="10"><b>Quantity Available:&emsp;&emsp; @_MedicineList.QuantityAvailable</b></MudItem>
+           <MudItem xs="10"><b>Description:&emsp;&emsp;@_MedicineList.Description</b></MudItem>
+            <MudItem xs="10"><MudTextField TextChanged="Check" Variant="Variant.Outlined" Label="Quantity" @bind-Value="UserRequest.Quantity" Margin="Margin.Dense"></MudTextField></MudItem>
+             @if(_MedicineList.IsActive==true)
+             {
+                 <MudItem xs="1"></MudItem>
+                <MudItem xs="12" md="8">
+                    <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Text"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="fileInput">
+                        Upload Prescription
+                </MudButton></MudItem>
+                    
+                    <MudItem xs="3">
+                        <MudText>@ImageName</MudText></MudItem>
+   
+             }
+           
+            </MudGrid>
+     </div>
+     <div style="width:49%;float:right;margin-top:2%">
+       <MudAvatar Square="true"  Image="@_MedicineList.ImagePath" Style="height:300px;width:300px"></MudAvatar>
+     </div>
+     <div style="width:100%">
+      <MudButton Style="margin-bottom:3%;margin-left:40%;margin-top:2%" Variant="Variant.Filled" Color="Color.Error" OnClick="Save" StartIcon="@Icons.Filled.Add">Add To Card</MudButton></div>
+ </MudPaper>  
+ 
+
+ <legend><h2><b>Similar Products</b></h2></legend>
+<br />
+@*<MudGrid>
+     <MudItem xs="7"><p style="color:cornflowerblue"><b><h2>Shop by Products..........</h2></b></p></MudItem>
+</MudGrid>*@
+<MudPaper>
+    <MudGrid>
+        @foreach (var items in _MedicineList1)
+        {
+               <MudItem xs="2">
+                    <MudPaper>
+                        <MudAvatar Square="true" Style="height:147px;width:155px;margin-left:14%" Image="@items.ImagePath"></MudAvatar>
+                         <MudText Style="margin-left:14%"><MudIconButton Link="@($"/Viewdetails/{@items.Id}")"><b>@items.Name</b></MudIconButton></MudText>
+                         <MudText Style="margin-left:14%"><MudIconButton ><b>Rs. @items.SalePrice</b></MudIconButton></MudText>
+                    </MudPaper>
+                </MudItem>
+
+          @*  <MudItem xs="2">
+                <MudPaper Style="margin-left:2%;margin-right:1%" Elevation="4">
+                         <MudAvatar Square="true" Style="height:147px;width:155px;margin-left:8%" Image="@items.ImagePath"></MudAvatar>
+                         <MudText Style="margin-left:8%"><MudLink><b>@items.Name</b></MudLink></MudText>
+                         <MudText Style="margin-left:8%"><MudLink><b>Rs. @items.SalePrice</b></MudLink></MudText>
+                       @* <MudButton StartIcon="@Icons.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Error">@items.SalePrice</MudButton>
+                </MudPaper>
+            </MudItem>*@
+        }
+    </MudGrid>
+</MudPaper>
+
+</div>
+

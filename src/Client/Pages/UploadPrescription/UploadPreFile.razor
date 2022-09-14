@@ -1,0 +1,43 @@
+﻿<MudPaper>
+    <MudGrid>
+        <MudItem xs="1"></MudItem>
+      <MudItem xs="10"><MudTextField @bind-Value="Upload.BillingAddress" Label="Billng Address" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudItem>
+        <MudItem xs="1"></MudItem>
+        <MudItem xs="1"></MudItem>
+      <MudItem xs="6"> <MudTextField @bind-Value="Upload.PhoneNumber" Label="Phone Number" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudItem>
+      <MudItem xs="5">  <MudButton Disabled="@OTPDisable"  OnClick="SendOTP" Variant="Variant.Filled" Margin="Margin.Dense" Color="Color.Tertiary">Send OTP</MudButton></MudItem>
+      <MudItem xs="1"></MudItem>
+      <MudItem xs="10"><MudTextField @bind-Value="Upload.OTP" TextChanged="CheckOTPValid" Label="Enter OTP Number" Disabled="@OTPCheck" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudItem>
+      <MudItem xs="1"></MudItem>
+      
+        @if (SaveModel.Count == 0)
+        {
+             <MudItem xs="1"></MudItem>
+            <MudItem xs="5">
+                <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Text"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="fileInput">
+                        Upload Prescription
+                    </MudButton>
+       </MudItem>
+        <MudItem xs="6">@ImageName</MudItem>
+       }
+      
+      <MudItem xs="1"></MudItem>
+      <MudItem xs="10"><MudTextField @bind-Value="Upload.Remarks" Label="Remarks" Lines="3" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField></MudItem>
+       <MudItem xs="1"></MudItem>
+      <MudItem xs="1"></MudItem>
+       <MudItem xs="11"><MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@IsSelected" OnClick="SaveAsync">Save</MudButton></MudItem>
+        <MudItem xs="1"></MudItem>
+         @if (SaveModel.Count == 0)
+        {
+          <MudItem xs="11"><MudCheckBox CheckedChanged="@((bool id)=>Checked(id))">Select Here to Continue...</MudCheckBox></MudItem>
+        }
+    </MudGrid>
+</MudPaper>
+
+

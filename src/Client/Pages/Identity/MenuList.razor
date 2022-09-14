@@ -1,0 +1,90 @@
+﻿@page "/identity/menulist"
+@using EPharma.Application.Responses.Identity
+@inject Microsoft.Extensions.Localization.IStringLocalizer<MenuList> _localizer
+@attribute [Authorize(Policy = Permissions.MenuList.View)]
+
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <MudTable Hover="true" Elevation="25" Items="_hrmenuList" Filter="new Func<MenuListResponse, bool>(Search)" @bind-mastertablesetup="_hrmenu">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreateMenuList)
+                {
+                    <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">@_localizer["Create"]</MudButton>
+                    <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetHrMenuListAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+                }
+                else
+                {
+                    <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetHrMenuListAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+                }
+            </div>
+            <MudToolBarSpacer />
+            @if (_canSearchMenuList)
+            {
+                <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="@_localizer["Search for Table"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
+            }
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh><MudTableSortLabel SortBy="new Func<MenuListResponse, object>(x => x.Id)">@_localizer["Id"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<MenuListResponse, object>(x => x.MenuName)">@_localizer["MenuName"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<MenuListResponse, object>(x => x.MenuNameNepali)">@_localizer["MenuNameNepali"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<MenuListResponse, object>(x => x.ParentItem)">@_localizer["ParentName"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<MenuListResponse, object>(x => x.Icon)">@_localizer["Icon"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<MenuListResponse, object>(x => x.Path)">@_localizer["Path"]</MudTableSortLabel></MudTh>
+            <MudTh Style="text-align:right">@_localizer["Actions"]</MudTh>
+
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@context.Id</MudTd>
+            <MudTd DataLabel="MenuName">
+                <MudHighlighter Text="@context.MenuName" HighlightedText="@_searchString" />
+            </MudTd>
+            <MudTd DataLabel="MenuNameNepali">
+                <MudHighlighter Text="@context.MenuNameNepali" />
+            </MudTd>
+            <MudTd DataLabel="ParentId">
+                <MudHighlighter Text="@context.ParentItem" />
+            </MudTd>
+            <MudTd DataLabel="Icon">
+                <MudHighlighter Text="@context.Icon" />
+            </MudTd>
+            <MudTd DataLabel="Path">
+                <MudHighlighter Text="@context.Path" />
+            </MudTd>
+            <MudTd DataLabel="Actions" Style="text-align: right">
+                @if (_canEditMenuList || _canDeleteMenuList)
+                    {
+                    <MudMenu Label="@_localizer["Actions"]" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
+                        @if (_canEditMenuList)
+                            {
+                            <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))">@_localizer["Edit"]</MudMenuItem>
+                            }
+                        @if (_canDeleteMenuList)
+                            {
+                            <MudMenuItem @onclick="@(() => Delete(@context.Id))">@_localizer["Delete"]</MudMenuItem>
+                            }
+                    </MudMenu>
+                    }
+                    else
+                    {
+                    <MudButton Variant="Variant.Filled"
+                               DisableElevation="true"
+                               StartIcon="@Icons.Material.Filled.DoNotTouch"
+                               IconColor="Color.Secondary"
+                               Size="Size.Small"
+                               Color="Color.Surface">
+                        @_localizer["No Allowed Actions"]
+                    </MudButton>
+                    }
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <TablePager />
+        </PagerContent>
+    </MudTable>
+}
+

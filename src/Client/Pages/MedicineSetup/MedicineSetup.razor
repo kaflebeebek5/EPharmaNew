@@ -1,0 +1,133 @@
+﻿@page "/MedicineSetup"
+@attribute [Authorize(Policy = Permissions.MedicineSetup.View)]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<MedicineSetup> _localizer
+@using EPharma.Application.Responses
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<HeroTitle Title="@_localizer["Product"]" Description="@_localizer["Manage Product."]" />
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        .Header {
+            border: 1px solid #b1afaf !important;
+            background-color: #1e88e5 !important;
+            border-collapse: collapse !important;
+            color: white;
+            text-align: left;
+        }
+
+        .Row {
+            border: 1px solid #b1afaf !important;
+            border-collapse: collapse !important;
+            text-align: center;
+        }
+
+        th,
+        td {
+            padding: 0.5rem;
+        }
+
+        tfoot {
+            background: #eee;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            border-bottom: 2px solid #ccc;
+        }
+
+        tfoot {
+            position: sticky;
+            bottom: 0;
+            border-top: 2px solid #ccc;
+        }
+    </style>
+    <MudTable Hover="true" Elevation="25" Items="_medicineList" Dense="true" Bordered="true" Striped="true" Filter="new Func<MedicineSetupResponseModel, bool>(Search)" @bind-MedicineSetup="_medicine">
+        <ToolBarContent>
+            <div class="justify-center mud-text-align-center">
+                @if (_canCreateMedicineSetup)
+                {
+                <MudButton DisableElevation Variant="Variant.Filled" Color="Color.Primary" OnClick="(() => InvokeModal())" StartIcon="@Icons.Material.Filled.Add" IconColor="Color.Surface">@_localizer["Create"]</MudButton>
+                <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetMedicineSetupAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+                @if (_canExportMedicineSetup)
+                    {
+                    <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">@_localizer["Export"]</MudButton>
+                    }   }
+                else
+                {
+                <MudButton DisableElevation Variant="Variant.Filled" OnClick="GetMedicineSetupAsync" StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+                @if (_canExportMedicineSetup)
+                {
+                    <MudButton DisableElevation Variant="Variant.Filled" StartIcon="@Icons.Custom.FileFormats.FileExcel" IconColor="Color.Secondary" Color="Color.Surface" Style="margin-left: 5px;">@_localizer["Export"]</MudButton>
+                }   }
+        </div>
+        <MudToolBarSpacer />
+        @if (_canSearchMedicineSetup)
+        {
+            <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="@_localizer["Search for Medicine"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3"></MudTextField>
+        }
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh Class="Header"><MudTableSortLabel SortBy="new Func<MedicineSetupResponseModel, object>(x => x.Id)">@_localizer["Id"]</MudTableSortLabel></MudTh>
+        <MudTh Class="Header"><MudTableSortLabel SortBy="new Func<MedicineSetupResponseModel, object>(x => x.Name)">@_localizer["Name"]</MudTableSortLabel></MudTh>
+        <MudTh Class="Header"><MudTableSortLabel SortBy="new Func<MedicineSetupResponseModel, object>(x => x.QuantityAvailable)">@_localizer["Quantity"]</MudTableSortLabel></MudTh>
+        <MudTh Class="Header"><MudTableSortLabel SortBy="new Func<MedicineSetupResponseModel, object>(x => x.ManufactureDate)">@_localizer["Manufacture Date"]</MudTableSortLabel></MudTh>
+        <MudTh Class="Header"><MudTableSortLabel SortBy="new Func<MedicineSetupResponseModel, object>(x => x.ExpiryDate)">@_localizer["Expiry Date"]</MudTableSortLabel></MudTh>
+        <MudTh Class="Header"><MudTableSortLabel SortBy="new Func<MedicineSetupResponseModel, object>(x => x.ImagePath)">@_localizer["Image"]</MudTableSortLabel></MudTh>
+        <MudTh Class="Header" Style="text-align:right">@_localizer["Actions"]</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Name">
+            <MudHighlighter Text="@context.Name" HighlightedText="@_searchString" />
+        </MudTd>
+        <MudTd DataLabel="Code">@context.QuantityAvailable</MudTd>
+        <MudTd DataLabel="Code">@context.ManufactureDate</MudTd>
+        <MudTd DataLabel="NRB Code">@context.ExpiryDate</MudTd>
+        <MudTd DataLabel="Branch Type"><MudButton OnClick="()=>ViewImage(context.Id)" Variant="Variant.Filled" Title="View Image" StartIcon="@Icons.Filled.Preview" Size="Size.Small" Color="Color.Primary"></MudButton></MudTd>
+        <MudTd DataLabel="Actions" Style="text-align: right">
+            @if (_canEditMedicineSetup || _canDeleteMedicineSetup)
+                {
+                <MudMenu Label="@_localizer["Actions"]" Variant="Variant.Filled" DisableElevation="true" EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Secondary" Direction="Direction.Left" OffsetX="true">
+                    @if (_canEditMedicineSetup)
+                    {
+                        <MudMenuItem @onclick="@(() => InvokeModal(@context.Id))">@_localizer["Edit"]</MudMenuItem>
+                    }
+                    @if (_canDeleteMedicineSetup)
+                    {
+                        <MudMenuItem @onclick="@(() => Delete(@context.Id))">@_localizer["Delete"]</MudMenuItem>
+                    }
+                </MudMenu>
+                }
+                else
+                {
+                 <MudButton Variant="Variant.Filled"
+                       DisableElevation="true"
+                       StartIcon="@Icons.Material.Filled.DoNotTouch"
+                       IconColor="Color.Secondary"
+                       Size="Size.Small"
+                       Color="Color.Surface">
+                    @_localizer["No Allowed Actions"]
+                 </MudButton>
+                }
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <TablePager />
+    </PagerContent>
+</MudTable>
+}
+

@@ -1,0 +1,99 @@
+﻿@page "/UserMedicineView"
+@attribute [Authorize(Policy = Permissions.UserMedicine.View)]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<UserMedicineOrder> _localizer
+
+<style>
+    .mud-table-container {
+        overflow: auto;
+    }
+</style>
+
+<HeroTitle Title="@_localizer[""]" Description="@_localizer["Manage Doctor."]" />
+@if (!_loaded)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    @foreach (var Items in _userMedicineList)
+    {
+        <MudPaper Elevation="5">
+            <MudTextField T="string" Margin="Margin.Dense">@Items.MedicineName</MudTextField>
+        </MudPaper>
+    }
+    @*<div id="PrintLoanAccount" class="PrintLoanAccount" style="width:100%">
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            .Header {
+                border: 1px solid #f1e8e8 !important;
+                background-color: #1e88e5 !important;
+            }
+
+            .Row {
+                border: 1px solid #f1e8e8 !important;
+                border-collapse: collapse !important;
+            }
+
+            th,
+            td {
+                padding: 1rem;
+            }
+
+            tfoot {
+                background: #eee;
+            }
+
+            thead {
+                position: sticky;
+                top: 0;
+                border-bottom: 2px solid #ccc;
+            }
+
+            tfoot {
+                position: sticky;
+                bottom: 0;
+                border-top: 2px solid #ccc;
+            }
+        </style>
+        <table id="table" style="width:150%;border-collapse:collapse !important;border: 1px solid #f1e8e8;">
+            <thead>
+                <tr class="Header" style="height:40px">
+                    <th class="Header"><b>@_localizer["Loan Number"]</b></th>
+                    <th class="Header"><b>@_localizer["Loan Type"]</b></th>
+                    <th class="Header"><b>@_localizer["Approved Amount"]</b></th>
+                    <th class="Header"><b>@_localizer["Remaining Amount"]</b></th>
+                    <th class="Header"><b>@_localizer["Issued Date"]</b></th>
+                    <th class="Header"><b>@_localizer["Last Date"]</b></th>
+                    <th class="Header"><b>@_localizer["Statement"]</b></th>
+                    <th class="Header"><b>@_localizer["Projection"]</b></th>
+                    <th class="Header"><b>@_localizer["Revolving Approve Amount"]</b></th>
+                    <th class="Header"><b>@_localizer["Loan Disbursment Count"]</b></th>
+                    <th class="Header"><b>@_localizer["Issue Status"]</b></th>
+                    <th class="Header"><b>@_localizer["Is Revolving"]</b></th>
+                </tr>
+            </thead>
+            @foreach (var items in _LoanList)
+            {
+                <tbody>
+                    <tr style="height:30px">
+                        <td style="text-align:center" Class="Row" DataLabel="Loan Number">@items.LoanNo</td>
+                        <td Class="Row" DataLabel="Loan Type">@items.LaonType</td>
+                        <td style="text-align:right" Class="Row" DataLabel="Approved Amount">@Math.Round(items.ApprovedAmt,2)</td>
+                        <td style="text-align:right" Class="Row" DataLabel="Remaining Amount">@Math.Round(items.RemainingAmt,2)</td>
+                        <td Class="Row" DataLabel="Issued Date">@ConvertNE.ConvertEToNWithSlash(items.Date)</td>
+                        <td Class="Row" DataLabel="Last Date"> @ConvertNE.ConvertEToNWithSlash(items.lastdate)</td>
+                        <td style="text-align:center" Class="Row" DataLabel="Statement">@items.Statement</td>
+                        <td Class="Row" DataLabel="Projection">@items.Payment</td>
+                        <td style="text-align:right" Class="Row" DataLabel="Revolving Approve Amount">@Math.Round(items.RevolvingApproveAmount,2)</td>
+                        <td style="text-align:right" Class="Row" DataLabel="Loan Disbursment Count">@items.loanDisbursmentCount</td>
+                        <td Class="Row" DataLabel="Issue Status">@items.IssueStatus</td>
+                        <td Class="Row" DataLabel="Is Revolving">@items.IsRevolving</td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>*@
+}

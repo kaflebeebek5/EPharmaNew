@@ -1,0 +1,200 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> _localizer
+@using EPharma.Client.Infrastructure.Managers.Identity.MenuRole
+@inject IMenuRoleManager menuRoleManager
+@using System.Security.Claims
+@using EPharma.Application.Responses.Identity;
+@using System.Globalization;
+<UserCard />
+@*<MudPaper Class="d-inline-flex py-3" Square="true">
+        <MudNavMenu Class="mud-width-full">
+            <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">@_localizer["Home"]</MudNavLink>
+            @if (_canViewHangfire)
+            {
+                <MudNavLink Href="/jobs" Target="_blank" Icon="@Icons.Material.Outlined.Work">
+                    @_localizer["Hangfire"]
+                </MudNavLink>
+            }
+            <MudNavLink Href="https://codewithmukesh.com/blog/blazor-hero-quick-start-guide/" Target="_blank" Icon="@Icons.Material.Outlined.ReadMore">
+                @_localizer["Quick Start Guide"]
+            </MudNavLink>
+            <MudNavLink Href="/swagger/index.html" Target="_blank" Icon="@Icons.Material.Outlined.LiveHelp">
+                @_localizer["Swagger"]
+            </MudNavLink>
+            @if (_canViewDashboards)
+            {
+                <MudNavLink Href="/dashboard" Icon="@Icons.Material.Outlined.Dashboard">
+                    @_localizer["Dashboard"]
+                </MudNavLink>
+            }
+            <MudNavLink Href="/account" Icon="@Icons.Material.Outlined.SupervisorAccount">
+                @_localizer["Account"]
+            </MudNavLink>
+            @if (_canViewAuditTrails)
+            {
+                <MudNavLink Href="/audit-trails" Icon="@Icons.Material.Outlined.Security">
+                    @_localizer["Audit Trails"]
+                </MudNavLink>
+            }
+            @if (_canViewDocuments || _canViewDocumentTypes)
+            {
+                <MudNavGroup Title="@_localizer["Document Management"]" Icon="@Icons.Filled.Settings" Expanded="false">
+                    @if (_canViewDocuments)
+                    {
+                        <MudNavLink Href="/document-store" Icon="@Icons.Material.Outlined.AttachFile">
+                            @_localizer["Document Store"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewDocumentTypes)
+                    {
+                        <MudNavLink Href="/document-types" Icon="@Icons.Material.Outlined.FileCopy">
+                            @_localizer["Document Types"]
+                        </MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+
+            @if (_canViewUsers || _canViewRoles || _canViewMenuList || _canViewMenuRole)
+            {
+                <MudNavGroup Title="@_localizer["Administrator"]" Icon="@Icons.Filled.Settings" Expanded="false">
+                    @if (_canViewUsers)
+                    {
+                        <MudNavLink Href="/identity/users" Icon="@Icons.Material.Outlined.Person">
+                            @_localizer["Users"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewRoles)
+                    {
+                        <MudNavLink Href="/identity/roles" Icon="@Icons.Material.Outlined.Person">@_localizer["Roles"]</MudNavLink>
+                    }
+                    @if (_canViewMenuList)
+                    {
+                        <MudNavLink Href="/identity/menulist" Icon="@Icons.Material.Outlined.CallToAction">@_localizer["MenuList"]</MudNavLink>
+                    }
+                    @if (_canViewMenuRole)
+                    {
+                        <MudNavLink Href="/identity/MenuRole" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["MenuRole"]
+                        </MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+            @if (_canViewChat)
+            {
+                <MudNavGroup Title="@_localizer["Communication"]" Icon="@Icons.Filled.Settings" Expanded="false">
+                    <MudNavLink Href="/chat" Icon="@Icons.Material.Outlined.Chat">
+                        @_localizer["Chat"]
+                    </MudNavLink>
+                </MudNavGroup>
+            }
+            @if (_canViewGenders || _canViewHolidayFor || _canViewHolidayTypes || _canViewHolidaySetup || _canViewCalender || _canViewGenders || _canViewMasterTableSetup || _canViewTableSetup)
+            {
+                <MudNavGroup Title="@_localizer["Settings"]" Icon="@Icons.Filled.Settings" Expanded="false">
+                    @if (_canViewGenders)
+                    {
+                        <MudNavLink Href="/catalog/genders" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Genders"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewCastes)
+                    {
+                        <MudNavLink Href="/catalog/castes" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Castes"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewCommunities)
+                    {
+                        <MudNavLink Href="/catalog/communities" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Communities"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewCategories)
+                    {
+                        <MudNavLink Href="/settings/Categories" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Categories"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewHolidayTypes)
+                    {
+                        <MudNavLink Href="/settings/holidaytypes" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Holiday Types"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewHolidayFor)
+                    {
+                        <MudNavLink Href="/settings/holidayfor" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Holiday For"]
+                        </MudNavLink>
+                    }
+
+                    @if (_canViewHolidaySetup)
+                    {
+                        <MudNavLink Href="/settings/holidaysetup" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Holiday Setup"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewCalender)
+                    {
+                        <MudNavLink Href="/settings/calender" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Calender"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewMasterTableSetup)
+                    {
+                        <MudNavLink Href="/settings/mastertablesetup" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Master Table Setup"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewTableSetup)
+                    {
+                        <MudNavLink Href="/settings/tablesetup" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Table Setup"]
+                        </MudNavLink>
+                    }
+                    @if (_canViewBranch)
+                    {
+                        <MudNavLink Href="/settings/branch" Icon="@Icons.Material.Outlined.CallToAction">
+                            @_localizer["Branch"]
+                        </MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+
+        </MudNavMenu>
+    </MudPaper>*@
+
+<MudPaper Class="d-inline-flex py-3" Square="true">
+    <MudNavMenu Class="mud-width-full">
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Outlined.Home">@_localizer["Home"]</MudNavLink>
+        @foreach (var menu in menuList.Where(s => string.IsNullOrEmpty(s.ParentItem)).ToList())
+        {
+            @if (menuList.Where(s => s.ParentItem == menu.MenuName).FirstOrDefault() != null)
+            {
+                <MudNavGroup Title="@(currLangCode == "ne-NP"? menu.MenuNameNepali: menu.MenuName)" Icon="@menu.Icon" Expanded="false">
+                    @foreach (var subMenu in menuList.Where(s => s.ParentItem == menu.MenuName).ToList())
+                    {
+                        <MudNavLink Href="@subMenu.Path" Icon="@subMenu.Icon">
+                            @(currLangCode == "ne-NP"? subMenu.MenuNameNepali: subMenu.MenuName)
+                        </MudNavLink>
+                    }
+                </MudNavGroup>
+            }
+            else
+            {
+                <MudNavLink Href="@menu.Path" Icon="@menu.Icon">
+                    @(currLangCode == "ne-NP"? menu.MenuNameNepali: menu.MenuName)
+                </MudNavLink>
+            }
+        }
+    </MudNavMenu>
+</MudPaper>
+
+@code {
+    private List<MenuRoleResponse> menuList = new();
+    private string currLangCode = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        menuList = (await menuRoleManager.GetUserMenuListAsync()).Data;
+        currLangCode = CultureInfo.DefaultThreadCurrentCulture.Name;
+    }
+}

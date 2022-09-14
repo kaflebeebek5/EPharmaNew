@@ -1,0 +1,40 @@
+﻿@page "/identity/menurole"
+@using EPharma.Application.Responses.Identity
+@inject Microsoft.Extensions.Localization.IStringLocalizer<MenuRole> _localizer
+
+<MudTable Hover="true" Elevation="25" Items="_menuRole" FixedHeader="true" Breakpoint="Breakpoint.Sm"  @bind-menurole="_menu">
+    <ToolBarContent>
+        <MudGrid>
+            <MudItem xs="6" sm="2">
+                <MudSelect FullWidth="false" Class="my-4" ValueChanged="((string s) => GetMenuListAsync(s))" Style="width:50px;height:50px" T="string" Label="@_localizer["Role"]" Variant="Variant.Outlined" Margin="Margin.Dense" OffsetY="true">
+                    @foreach (var item in _Role)
+                    {
+                        <MudSelectItem T="string" Value="@item.Id">@item.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+            <MudItem xs="6" sm="2">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="my-4" OnClick="BtnSave" ButtonType="ButtonType.Submit">@_localizer["Update Role"]</MudButton>
+            </MudItem>
+            <MudItem xs="6" sm="2">
+                <MudButton Variant="Variant.Filled" OnClick="Reset" Class="my-4" StartIcon="@Icons.Material.Filled.Refresh" ButtonType="ButtonType.Submit" Color="Color.Secondary">@_localizer["Reload"]</MudButton>
+            </MudItem>
+        </MudGrid>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<MenuRoleResponse, object>(x => x.IsChecked)"><MudCheckBox  CheckedChanged="@((bool x) => onchange(x))" Color="Color.Primary"></MudCheckBox></MudTableSortLabel></MudTh>
+        @*<MudTh><MudHidden IsHidden="false"><MudTableSortLabel SortBy="new Func<MenuRoleResponse, object>(x => x.Id)">@_localizer["Id"]</MudTableSortLabel></MudHidden></MudTh>*@
+        <MudTh><MudTableSortLabel SortBy="new Func<MenuRoleResponse, object>(x => x.MenuName)">@_localizer["MenuName"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<MenuRoleResponse, object>(x => x.ParentItem)">@_localizer["ParentName"]</MudTableSortLabel></MudTh>
+
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@_localizer["Status"]"><MudCheckBox @bind-Checked="@context.IsChecked" Color="Color.Primary"></MudCheckBox></MudTd>
+        @*<MudTd DataLabel="Id"><MudHidden IsHidden="false" >@context.Id</MudHidden></MudTd>*@
+        <MudTd DataLabel="MenuName"><MudHighlighter Text="@context.MenuName" HighlightedText="@_searchString" /></MudTd>
+        <MudTd DataLabel="ParentName"><MudHighlighter Text="@context.ParentItem" /></MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <TablePager />
+    </PagerContent>
+</MudTable>

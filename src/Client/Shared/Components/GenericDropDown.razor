@@ -1,0 +1,2 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<GenericDropDown> _localizer
+<MudAutocomplete T="string" Label="@_localizer[@LabelName]" @bind-Value="BindingValue" ResetValueOnEmptyText="true" Margin="@Margin" SearchFunc="@SearchItems" Variant="@Variant" ToStringFunc="@(i => _items.FirstOrDefault(b => b.Id.ToString() == i)?.Name ?? string.Empty)" OffsetY="true" />

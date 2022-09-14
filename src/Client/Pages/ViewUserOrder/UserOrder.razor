@@ -1,0 +1,95 @@
+﻿@page "/UserOrder"
+
+<HeroTitle Title="UserOrder" Description="" />
+@if (!_loaded)
+{
+    <MudProgressCircular Size="Size.Large" style="height:70px;width:70px;margin-top:22%;margin-left:38%" Class="align-content-center" Color="Color.Primary" Indeterminate="true" />
+}
+else
+{
+    <div id="PrintLoanAccount" class="PrintLoanAccount" style="width:100%">
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            .Header {
+                border: 1px solid #b1afaf !important;
+                background-color: #1e88e5 !important;
+                  border-collapse: collapse !important;
+                color: white;
+                text-align: left;
+            }
+
+            .Row {
+                border: 1px solid #b1afaf !important;
+                border-collapse: collapse !important;
+                text-align: center;
+            }
+
+            th,
+            td {
+                padding: 0.5rem;
+            }
+
+            tfoot {
+                background: #eee;
+            }
+
+            thead {
+                position: sticky;
+                top: 0;
+                border-bottom: 2px solid #ccc;
+            }
+
+            tfoot {
+                position: sticky;
+                bottom: 0;
+                border-top: 2px solid #ccc;
+            }
+        </style>
+        <table id="table" style="width:100%;border-collapse:collapse !important;border: 1px solid #f1e8e8;">
+            <thead>
+                <tr style="height:32px">
+                    <th class="Header"><b>SN</b></th>
+                    <th class="Header"><b>Product Name</b></th>
+                    <th class="Header"><b>Billing Address</b></th>
+                    @*<th class="Header"><b>@_localizer["Projected Amount"]</b></th>
+                <th class="Header"><b>@_localizer["Requested Amount"]</b></th>
+                <th class="Header"><b>@_localizer["Saving Amount"]</b></th>*@
+                    <th class="Header"><b>Phone Number</b></th>
+                    <th class="Header"><b>Prescription</b></th>
+                    <th class="Header"><b>Status</b></th>
+                    <th class="Header"><b>Action</b></th>
+                </tr>
+            </thead>
+            @foreach (var items in _userOrderList)
+            {
+                <tbody>
+                    <tr style="height:30px">
+                        <td style="text-align:center" Class="Row" DataLabel="Client Id">@items.SN</td>
+                        <td style="text-align:center" Class="Row" DataLabel="Client Name">@items.ProductName</td>
+                        <td style="text-align:center" Class="Row" DataLabel="Branch Name">@items.BillingAddress</td>
+                        @*   <td style="text-align:center" Class="Row" DataLabel="Projected Amount">@Math.Round(items.ProjectedAmount,2)</td>
+                <td style="text-align:center" Class="Row" DataLabel="Projected Amount">@Math.Round(items.Amount,2)</td>
+                <td style="text-align:center" Class="Row" DataLabel="Projected Amount">@Math.Round(items.SavingAmount,2)</td>*@
+                        <td style="text-align:center" Class="Row" DataLabel="Deposit Date">@items.PhoneNumber</td>
+                        <td style="text-align:center" Class="Row" DataLabel="Deposit Date">
+                            @if (items.ImagePath != null)
+                            {
+                                <MudButton OnClick="()=>ViewImage(items.Id)" Variant="Variant.Filled" Title="View Priscription" StartIcon="@Icons.Filled.Preview" Size="Size.Small" Color="Color.Primary"></MudButton>
+                            }
+                        </td>
+                        <td Class="Row" DataLabel="Status">@items.ApproveStatus / @items.DeliveredStatus</td>
+                        <td Class="Row">
+                            <MudButton Color="Color.Primary" OnClick="Accept" Variant="Variant.Filled">Forward</MudButton>
+                            <MudButton Color="Color.Error" OnClick="Reject" Variant="Variant.Filled">Reject</MudButton>
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+    </div>
+}
+
+

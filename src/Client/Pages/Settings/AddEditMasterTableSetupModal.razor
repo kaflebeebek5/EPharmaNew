@@ -1,0 +1,55 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<AddEditMasterTableSetupModal> _localizer
+
+<EditForm Model="@AddEditMasterTableSetupModel" OnValidSubmit="SaveAsync">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <MudDialog>
+        <TitleContent>
+            @{
+                if (AddEditMasterTableSetupModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        @_localizer["Add MasterTable"]
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        @_localizer["Update Table"]
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (AddEditMasterTableSetupModel.Id != 0)
+                {
+                    <MudItem xs="12" md="3">
+                        <MudTextField Disabled For="@(() => AddEditMasterTableSetupModel.Id)" @bind-Value="AddEditMasterTableSetupModel.Id" Label="@_localizer["Id"]" />
+                    </MudItem>
+                }
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditMasterTableSetupModel.TableName)" @bind-Value="AddEditMasterTableSetupModel.TableName" Label="@_localizer["TableName"]" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditMasterTableSetupModel.ColumnId)" @bind-Value="AddEditMasterTableSetupModel.ColumnId" Label="@_localizer["ColumnId"]" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditMasterTableSetupModel.ColumnName)" @bind-Value="AddEditMasterTableSetupModel.ColumnName" Label="@_localizer["ColumnName"]" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel">@_localizer["Cancel"]</MudButton>
+            @if (AddEditMasterTableSetupModel.Id != 0)
+            {
+                <MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Secondary">@_localizer["Update"]</MudButton>
+            }
+            else
+            {
+                <MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Success">@_localizer["Save"]</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

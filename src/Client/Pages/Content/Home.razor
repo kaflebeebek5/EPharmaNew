@@ -1,0 +1,70 @@
+@page "/home"
+@page "/"
+@attribute [AllowAnonymous]
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Home> _localizer
+
+<MudContainer>
+    <MudGrid>
+        <MudItem xs="7"><p style="color:cornflowerblue"><b><h2>What are you Looking For...</h2></b></p></MudItem>
+        <MudItem xs="5"><p style="color:cornflowerblue"><b><h2>Order With Prescription <MudButton OnClick="Upload" Variant="Variant.Filled" Color="Color.Secondary">Upload Now</MudButton></h2></b></p></MudItem>
+        <MudItem xs="12"><MudTextField Style="margin-top:-2%" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Primary" Placeholder="Search For Products" T="string"></MudTextField></MudItem>
+        
+        <MudCarousel  Class="mud-width-full" Style="height:300px;width:100%" ShowArrows="true" ShowBullets="true" EnableSwipeGesture="true" AutoCycle="true" TData="object">
+            <MudCarouselItem Color="@Color.Primary">
+                <div class="d-flex" style="height:100%">
+                   @* <MudIcon Class="mx-auto my-auto" Icon="@Icons.Filled.MedicalServices" Size="@Size.Large" />*@
+                    <MudAvatar Square="true" Style="height:500px;width:1500px" Image="EPharmaPhotos\Medicine.webp"></MudAvatar>
+                </div>
+            </MudCarouselItem>
+            <MudCarouselItem Color="@Color.Secondary">
+                <div class="d-flex" style="height:100%">
+                  @*  <MudIcon Class="mx-auto my-auto" Icon="@Icons.Material.Filled.Mediation" Size="@Size.Large" />*@
+                   <MudAvatar Style="height:500px;width:1500px" Square="true" Image="EPharmaPhotos\HomeCare.jpg"></MudAvatar>
+                </div>
+            </MudCarouselItem>
+            <MudCarouselItem>
+                <div class="d-flex" style="height:100%">
+                    @*<MudIcon Class="mx-auto my-auto" Icon="@Icons.Custom.Brands.MudBlazor" Color="@Color.Primary" Size="@Size.Large" />*@
+                    <MudAvatar Style="height:500px;width:1500px" Square="true" Image="EPharmaPhotos\fooditem.jpg"></MudAvatar>
+                </div>
+            </MudCarouselItem>
+        </MudCarousel>
+     @if (_CategoryList.Count >0)
+        {
+            <MudPaper Style="margin-top:3%;margin-bottom:3%">
+                <legend style="margin-bottom:2%;margin-left:1%;"><h1><b>Shop by Categories.....</b></h1></legend>
+                <MudGrid>
+
+                    @foreach (var items in _CategoryList)
+                    {
+                        <MudItem xs="2">
+                            <MudPaper>
+                                <MudAvatar Square="true" Style="height:147px;width:155px;margin-left:8%" Image="@items.ImagePath"></MudAvatar>
+                                <MudText><MudIconButton Style="color:blue" Link="@($"ViewProducts/{@items.Id}")"><b>@items.Name</b></MudIconButton></MudText>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
+        <div style="margin-top:1%"></div>
+        </MudPaper>
+        }
+    </MudGrid>
+    @if (_MedicineList.Count > 0)
+    {
+        <legend><h1><b>New Launch Products.....</b></h1></legend>
+        <MudPaper>
+            @foreach (var items in _MedicineList)
+            {
+                <MudGrid>
+                    <MudItem xs="3">
+                        <MudPaper>
+                            <MudText><MudLink><b>@items.Name</b></MudLink></MudText>
+                            <MudAvatar Square="true" Style="height:100px;width:100px" Image="@items.ImagePath"></MudAvatar>
+                            <MudButton StartIcon="@Icons.Filled.Add" Color="Color.Error">Add To Cart</MudButton>
+                        </MudPaper>
+                    </MudItem>
+                </MudGrid>
+            }
+        </MudPaper>
+    }
+</MudContainer>

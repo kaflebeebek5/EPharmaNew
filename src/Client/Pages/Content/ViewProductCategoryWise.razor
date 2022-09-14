@@ -1,0 +1,33 @@
+﻿@page "/ViewProducts/{Id}"
+@attribute [AllowAnonymous]
+<legend><h2><b>Product List</b></h2></legend>
+<br />
+<MudGrid Style="margin-bottom:2%">
+     <MudItem xs="7"><p style="color:cornflowerblue"><b><h2>Shop by Products..........</h2></b></p></MudItem>
+     <MudItem xs="5"><MudTextField T="string" Placeholder="Search......."></MudTextField> </MudItem>
+</MudGrid>
+<MudPaper>
+    <MudGrid>
+        @foreach (var items in _MedicineList)
+        {
+               <MudItem xs="2">
+                    <MudPaper>
+                        <MudAvatar Square="true" Style="height:147px;width:155px;margin-left:14%" Image="@items.ImagePath"></MudAvatar>
+                         <MudText Style="margin-left:14%"><MudIconButton Link="@($"/Viewdetails/{@items.Id}")"><b>@items.Name</b></MudIconButton></MudText>
+                         <MudText Style="margin-left:14%"><MudIconButton ><b>Rs. @items.SalePrice</b></MudIconButton></MudText>
+                    </MudPaper>
+                </MudItem>
+
+          @*  <MudItem xs="2">
+                <MudPaper Style="margin-left:2%;margin-right:1%" Elevation="4">
+                         <MudAvatar Square="true" Style="height:147px;width:155px;margin-left:8%" Image="@items.ImagePath"></MudAvatar>
+                         <MudText Style="margin-left:8%"><MudLink><b>@items.Name</b></MudLink></MudText>
+                         <MudText Style="margin-left:8%"><MudLink><b>Rs. @items.SalePrice</b></MudLink></MudText>
+                       @* <MudButton StartIcon="@Icons.Filled.Add" Variant="Variant.Filled" Size="Size.Small" Color="Color.Error">@items.SalePrice</MudButton>
+                </MudPaper>
+            </MudItem>*@
+        }
+    </MudGrid>
+</MudPaper>
+
+

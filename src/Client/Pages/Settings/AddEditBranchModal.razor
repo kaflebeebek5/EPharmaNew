@@ -1,0 +1,89 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<AddEditBranchModal> _localizer
+
+<EditForm Model="@AddEditBranchModel" OnValidSubmit="SaveAsync">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <MudDialog>
+        <TitleContent>
+            @{
+                if (AddEditBranchModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        @_localizer["Add Branch"]
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        @_localizer["Update Branch"]
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (AddEditBranchModel.Id != 0)
+                {
+                    <MudItem xs="12" md="4">
+                        <MudTextField Disabled For="@(() => AddEditBranchModel.Id)" @bind-Value="AddEditBranchModel.Id" Label="@_localizer["Id"]" />
+                    </MudItem>
+                }
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.Name)" @bind-Value="AddEditBranchModel.Name" Label="@_localizer["Name"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.NameNepali)" @bind-Value="AddEditBranchModel.NameNepali" Label="@_localizer["Name Nepali"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.Code)" @bind-Value="AddEditBranchModel.Code" Label="@_localizer["Code"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.NRBCode)" @bind-Value="AddEditBranchModel.NRBCode" Label="@_localizer["NRB Code"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudDatePicker Label="@_localizer["Operation Date"]" Editable="true" @bind-Date="AddEditBranchModel.OperationDate"  Placeholder="@_localizer["Select Date"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <GenericDropDown ValueChanged="((id) => AddEditBranchModel.Id=int.Parse(id))" TableName="Branch" LabelName="Parent Branch"></GenericDropDown>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <GenericDropDown ValueChanged="((id) => AddEditBranchModel.BranchTypeId=int.Parse(id))" TableName="BranchType" LabelName="Branch Type"></GenericDropDown>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <GenericDropDown ValueChanged="((id) => AddEditBranchModel.ProvinceId=int.Parse(id))" TableName="Province" LabelName="Province"></GenericDropDown>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <GenericDropDown ValueChanged="((id) => AddEditBranchModel.DistrictId=int.Parse(id))" TableName="District" LabelName="District"></GenericDropDown>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <GenericDropDown ValueChanged="((id) => AddEditBranchModel.LocalBodiesId=int.Parse(id))" TableName="LocalBodies" LabelName="LocalBodies"></GenericDropDown>
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.Locality)" @bind-Value="AddEditBranchModel.Locality" Label="@_localizer["Locality"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="int?" For="@(() => AddEditBranchModel.WardNo)" @bind-Value="AddEditBranchModel.WardNo" Label="@_localizer["Ward No"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.PhoneNo)" @bind-Value="AddEditBranchModel.PhoneNo" Label="@_localizer["Phone No"]" />
+                </MudItem>
+                <MudItem xs="12" md="4">
+                    <MudTextField T="string" For="@(() => AddEditBranchModel.Email)" @bind-Value="AddEditBranchModel.Email" Label="@_localizer["Email"]" />
+                </MudItem>
+
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel">@_localizer["Cancel"]</MudButton>
+            @if (AddEditBranchModel.Id != 0)
+            {
+                <MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Secondary">@_localizer["Update"]</MudButton>
+            }
+            else
+            {
+                <MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Success">@_localizer["Save"]</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

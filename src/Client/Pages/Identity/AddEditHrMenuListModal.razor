@@ -1,0 +1,61 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<AddEditHrMenuListModal> _localizer
+
+<EditForm Model="@AddEditHrMenuListModel" OnValidSubmit="SaveAsync">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <MudDialog>
+        <TitleContent>
+            @{
+                if (AddEditHrMenuListModel.Id == 0)
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+                        @_localizer["Add MasterTable"]
+                    </MudText>
+                }
+                else
+                {
+                    <MudText Typo="Typo.h6">
+                        <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+                        @_localizer["Update Table"]
+                    </MudText>
+                }
+            }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (AddEditHrMenuListModel.Id != 0)
+                {
+                    <MudItem xs="12" md="3">
+                        <MudTextField Disabled For="@(() => AddEditHrMenuListModel.Id)" @bind-Value="AddEditHrMenuListModel.Id" Label="@_localizer["Id"]" />
+                    </MudItem>
+                }
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditHrMenuListModel.MenuName)" @bind-Value="AddEditHrMenuListModel.MenuName" Label="@_localizer["Menu Name"]" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditHrMenuListModel.MenuNameNepali)" @bind-Value="AddEditHrMenuListModel.MenuNameNepali" Label="@_localizer["MenuNameNepali"]" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudAutocomplete T="int?" Label="@_localizer["ParentName"]" MaxItems="100"  For="@(() => AddEditHrMenuListModel.ParentId)" @bind-Value="AddEditHrMenuListModel.ParentId" ResetValueOnEmptyText="@resetValueOnEmptyText"  SearchFunc="@ParentSearch" ToStringFunc="@(i => _menuList.FirstOrDefault(b => b.Id == i)?.MenuName ?? string.Empty)" OffsetY="true" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditHrMenuListModel.Icon)" @bind-Value="AddEditHrMenuListModel.Icon" Label="@_localizer["Icon"]" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <MudTextField T="string" For="@(() => AddEditHrMenuListModel.Path)" @bind-Value="AddEditHrMenuListModel.Path" Label="@_localizer["Path"]" />
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel">@_localizer["Cancel"]</MudButton>
+            @if (AddEditHrMenuListModel.Id != 0)
+            {
+                <MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Secondary">@_localizer["Update"]</MudButton>
+            }
+            else
+            {
+                <MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Success">@_localizer["Save"]</MudButton>
+            }
+        </DialogActions>
+    </MudDialog>
+</EditForm>

@@ -1,0 +1,89 @@
+﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<AddEditMedicineSetupModal> _localizer
+
+<EditForm Model="@medicineRequestModel" OnValidSubmit="SaveAsync">
+    <FluentValidationValidator @ref="_fluentValidationValidator" />
+    <MudDialog>
+        <TitleContent>
+            @{ if (medicineRequestModel.Id == 0)
+                {
+<MudText Typo="Typo.h6">
+    <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-3 mb-n1" />
+    @_localizer["Add Product"]
+</MudText> }
+else
+{
+<MudText Typo="Typo.h6">
+    <MudIcon Icon="@Icons.Material.Filled.Update" Class="mr-3 mb-n1" />
+    @_localizer["Update Product"]
+</MudText> } }
+        </TitleContent>
+        <DialogContent>
+            <MudGrid>
+                @if (medicineRequestModel.Id != 0)
+                {
+            <MudItem xs="12" md="6">
+                <MudTextField Margin="Margin.Dense" Disabled For="@(() => medicineRequestModel.Id)" @bind-Value="medicineRequestModel.Id" Label="@_localizer["Id"]" />
+            </MudItem>}
+             <MudItem xs="12" md="6">
+                  <GenericDropDown Margin="Margin.Dense" Variant="Variant.Outlined" InitialValue="@medicineRequestModel.CategoryId.ToString()" LabelName="Category" TableName="tblCategory" ValueChanged="@((id)=>medicineRequestModel.CategoryId=int.Parse(id))"></GenericDropDown>
+                </MudItem>
+                 <MudItem xs="12" md="6">
+                  <GenericDropDown Margin="Margin.Dense" Variant="Variant.Outlined" InitialValue="@medicineRequestModel.SubCategoryId.ToString()" LabelName="Sub Category" ValueChanged="@((id)=>medicineRequestModel.SubCategoryId=int.Parse(id))" TableName="tblSubCategory"></GenericDropDown>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="string" Margin="Margin.Dense" Variant="Variant.Outlined" For="@(() => medicineRequestModel.Name)" @bind-Value="medicineRequestModel.Name" Label="@_localizer["Name"]" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField T="int" Margin="Margin.Dense" Variant="Variant.Outlined" For="@(() => medicineRequestModel.QuantityAvailable)" @bind-Value="medicineRequestModel.QuantityAvailable" Label="@_localizer["Quantity"]" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <NepaliDate ValueChanged="((date) => medicineRequestModel.ManufactureDate=ConvertNE.convertNepaliToEnglish(date))" InitialValue="@ConvertNE.ConvertEToN(medicineRequestModel.ManufactureDate).ToString()" LabelName="Manufacture Date"></NepaliDate>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <NepaliDate ValueChanged="((date) => medicineRequestModel.ExpiryDate=ConvertNE.convertNepaliToEnglish(date))" InitialValue="@ConvertNE.ConvertEToN(medicineRequestModel.ExpiryDate).ToString()" LabelName="Expiry Date"></NepaliDate>
+                </MudItem>
+                 <MudItem xs="12" md="6">
+                    <MudTextField T="decimal" Margin="Margin.Dense" Variant="Variant.Outlined" For="@(() => medicineRequestModel.BuyPrice)" @bind-Value="medicineRequestModel.BuyPrice" Label="@_localizer["Buy Price"]" />
+                </MudItem>
+                 <MudItem xs="12" md="6">
+                    <MudTextField T="decimal" Margin="Margin.Dense" Variant="Variant.Outlined" For="@(() => medicineRequestModel.SalePrice)" @bind-Value="medicineRequestModel.SalePrice" Label="@_localizer["Sale Price"]" />
+                </MudItem>
+                 <MudItem xs="12" md="6">
+                    <MudTextField T="string" Margin="Margin.Dense" Variant="Variant.Outlined" For="@(() => medicineRequestModel.Unit)" @bind-Value="medicineRequestModel.Unit" Label="@_localizer["Unit"]" />
+                </MudItem>
+                 <MudItem xs="12" md="6">
+                    <MudTextField T="string" Margin="Margin.Dense" Variant="Variant.Outlined" For="@(() => medicineRequestModel.Manufacturer)" @bind-Value="medicineRequestModel.Manufacturer" Label="@_localizer["Manufacturer"]" />
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <InputFile id="fileInput" OnChange="UploadFiles" hidden />
+                    <MudButton HtmlTag="label"
+                               Variant="Variant.Text"
+                               Color="Color.Primary"
+                               Size="Size.Small"
+                               StartIcon="@Icons.Filled.CloudUpload"
+                               for="fileInput">
+                        @_localizer["Upload Photo"]
+                    </MudButton>
+                </MudItem>
+              
+                <MudItem xs="12" md="2">
+                    <MudText>@ImageName</MudText>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <MudTextField Margin="Margin.Dense" T="string" Variant="Variant.Outlined" For="@(() => medicineRequestModel.Description)" @bind-Value="medicineRequestModel.Description" Label="@_localizer["Description"]" />
+                </MudItem>
+                
+                <MudItem xs="12" md="6"><MudCheckBox @bind-Checked="medicineRequestModel.IsActive">Is Prescription Required</MudCheckBox></MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+            <MudButton DisableElevation Variant="Variant.Filled" OnClick="Cancel">@_localizer["Cancel"]</MudButton>
+            @if (medicineRequestModel.Id != 0)
+            {
+<MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Secondary">@_localizer["Update"]</MudButton> }
+else
+{
+<MudButton DisableElevation Variant="Variant.Filled" ButtonType="ButtonType.Submit" Disabled="@(!Validated)" Color="Color.Success">@_localizer["Save"]</MudButton>}
+        </DialogActions>
+    </MudDialog>
+</EditForm>
